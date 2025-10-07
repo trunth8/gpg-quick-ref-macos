@@ -77,14 +77,22 @@ Or to display it directly in your terminal:
 gpg --armor --export your@email.com
 ```
 
-Copy **everything**, including the header and footer lines:
+Copy **everything**, including the header, the blank line immediately after it, and the footer lines (do not remove the empty line):
 ```
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 ... (many lines) ...
 -----END PGP PUBLIC KEY BLOCK-----
 ```
 
-Then paste this text block into the web form field labeled **PGP KEY 1**, as shown below.
+Then paste this text block into the web form field labeled **PGP KEY 1** if the interface says **Enter as text**.  
+
+If instead the interface expects a *base64-encoded key* (toggle OFF or mentioned in UI), you can generate it like this:
+```bash
+gpg --export your@email.com | base64 > mypublickey.b64
+```
+Then open the file and copy the long single line of text to paste into the field.
+
+ **PGP KEY 1**, as shown below.
 
 ![Screenshot showing where to paste public key](Screenshot%202025-10-07%20at%2011.20.31%E2%80%AFAM.png)
 
