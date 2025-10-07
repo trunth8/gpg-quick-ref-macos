@@ -65,20 +65,42 @@ gpg --list-secret-keys
 
 ---
 
-## 6️⃣ Export Keys
-Public (safe to share):
+## 6️⃣ Export Public Key (for Web Forms or Integration)
+To share your public key safely (e.g., for encryption systems like HashiCorp Vault or similar tools):
+
 ```bash
-gpg --armor --export your@email.com > publickey.asc
+gpg --armor --export your@email.com > mypublickey.asc
 ```
 
-Private (keep offline & secure):
+Or to display it directly in your terminal:
 ```bash
-gpg --armor --export-secret-keys your@email.com > secretkey.asc
+gpg --armor --export your@email.com
 ```
+
+Copy **everything**, including the header and footer lines:
+```
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+... (many lines) ...
+-----END PGP PUBLIC KEY BLOCK-----
+```
+
+Then paste this text block into the web form field labeled **PGP KEY 1**, as shown below.
+
+![Screenshot showing where to paste public key](Screenshot%202025-10-07%20at%2011.20.31%E2%80%AFAM.png)
+
+🧩 Only your **public key** should be pasted — never your private key.
 
 ---
 
-## 7️⃣ Create Revocation Certificate
+## 7️⃣ Export Private Key (for backup only)
+```bash
+gpg --armor --export-secret-keys your@email.com > secretkey.asc
+```
+🔒 Store securely and never upload it anywhere.
+
+---
+
+## 8️⃣ Create Revocation Certificate
 ```bash
 gpg --output revoke.asc --gen-revoke your@email.com
 ```
@@ -86,7 +108,7 @@ gpg --output revoke.asc --gen-revoke your@email.com
 
 ---
 
-## 8️⃣ Remove a Key
+## 9️⃣ Remove a Key
 Public key:
 ```bash
 gpg --delete-key <KEYID>
@@ -98,19 +120,10 @@ gpg --delete-secret-key <KEYID>
 
 ---
 
-## 9️⃣ Publish / Share
+## 🔟 Publish / Share
 Send to keyserver:
 ```bash
 gpg --keyserver hkps://keys.openpgp.org --send-keys <KEYID>
-```
-
----
-
-## 🔟 Git Integration
-```bash
-gpg --list-secret-keys --keyid-format LONG
-git config --global user.signingkey <LONG_KEYID>
-git config --global commit.gpgSign true
 ```
 
 ---
