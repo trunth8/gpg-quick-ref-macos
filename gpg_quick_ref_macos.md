@@ -157,6 +157,32 @@ You can use either ID, but the **long fingerprint** is safest for editing, expor
 
 ---
 
+## 🔤 Key Capability Meanings
+
+| Symbol | Meaning | What it lets you do | Typical Key Type |
+|:-------:|:---------|:--------------------|:------------------|
+| **S** | **Sign** | Sign files, commits, or messages to prove they came from you | Primary or signing subkey |
+| **C** | **Certify** | Certify (authorize) your subkeys or other people’s keys | Primary key only |
+| **E** | **Encrypt** | Encrypt data so only you can decrypt it | Encryption subkey |
+| **A** | **Authenticate** | Used for login or SSH authentication | Authentication subkey (optional) |
+
+### 💡 Quick Summary
+- `[SC]` → Your **main key** can **Sign** and **Certify**.
+- `[E]` → A **subkey** that handles **encryption**.
+- `[A]` → Optional, used for **authentication**.
+
+### 🧩 Analogy
+Think of your GPG setup like a digital passport with specialized stamps:
+
+| Role | Purpose |
+|------|----------|
+| **S** = Signature stamp | “Yes, I signed this document myself.” |
+| **C** = Certification seal | “Yes, I vouch for this subkey’s authenticity.” |
+| **E** = Envelope key | “Use me to lock (encrypt) the message so only I can open it.” |
+| **A** = Access key | “Use me to prove my identity when logging in.” |
+
+---
+
 ## 🔒 Recommended Curve Choices
 
 | Curve | Description | Recommended Use |
