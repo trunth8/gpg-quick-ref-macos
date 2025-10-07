@@ -107,6 +107,29 @@ gpg --verify file.txt.asc
 
 ---
 
+## 1️⃣1️⃣ Find Your Key ID
+To view all keys and find your Key ID:
+```bash
+gpg --list-keys --keyid-format LONG
+```
+Example output:
+```
+pub   ed25519/3F4A7C2E9D123456 2025-10-07 [SC]
+      1A2B3C4D5E6F7A8B9C0D1E2F3F4A7C2E9D123456
+uid           [ultimate] John Doe <john@example.com>
+sub   cv25519/7A1B2C3D4E5F6A7B 2025-10-07 [E]
+```
+- Short Key ID → `3F4A7C2E9D123456`
+- Full fingerprint → `1A2B3C4D5E6F7A8B9C0D1E2F3F4A7C2E9D123456`
+
+Get fingerprint (safer):
+```bash
+gpg --fingerprint
+```
+You can use either ID, but the **long fingerprint** is safest for editing, exporting, or deleting.
+
+---
+
 ## 🔒 Recommended Curve Choices
 
 | Curve | Description | Recommended Use |
