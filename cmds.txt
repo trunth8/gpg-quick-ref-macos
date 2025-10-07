@@ -1,0 +1,14 @@
+gpg --list-secret-keys
+gpg --delete-secret-key  AE9ED62A80866A6B2C10923292C20CBAB0D78EA3
+gpg --delete-key AE9ED62A80866A6B2C10923292C20CBAB0D78EA3  
+gpg --list-keys
+
+gpg --export your@email.com | base64 > mypublickey.b64
+
+#decrypt root token
+cat root-token.pgp |base64 -d |gpg --decrypt
+
+#decrypt unseal key
+cat unseal-key1.pgp |base64 -d|gpg --decrypt
+
+
