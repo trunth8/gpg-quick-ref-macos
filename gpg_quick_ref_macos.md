@@ -8,7 +8,32 @@ gpg --version
 
 ---
 
-## 2️⃣ Generate a New Key (Signing + Encryption)
+## 2️⃣ Configure Terminal Pinentry (Recommended)
+Use the terminal-based pinentry to avoid macOS GUI glitches when entering passphrases.
+
+```bash
+echo 'use-agent' >> ~/.gnupg/gpg.conf
+echo 'pinentry-program /usr/local/bin/pinentry-mac' >> ~/.gnupg/gpg-agent.conf
+echo 'allow-loopback-pinentry' >> ~/.gnupg/gpg-agent.conf
+echo 'pinentry-mode loopback' >> ~/.gnupg/gpg.conf
+gpgconf --kill gpg-agent
+```
+
+Alternatively, if `/usr/local/bin/pinentry-mac` causes passphrase mismatches, switch to the terminal interface:
+```bash
+echo 'pinentry-program /usr/local/bin/pinentry-curses' >> ~/.gnupg/gpg-agent.conf
+gpgconf --kill gpg-agent
+```
+
+You can also run a command directly using the terminal pinentry:
+```bash
+export GPG_TTY=$(tty)
+gpg --pinentry-mode loopback --full-generate-key
+```
+
+---
+
+## 3️⃣ Generate a New Key (Signing + Encryption)
 ```bash
 gpg --full-generate-key
 ```
@@ -22,7 +47,7 @@ This setup creates both signing and encryption subkeys automatically.
 
 ---
 
-## 3️⃣ Add or Modify Subkeys (Manual Option)
+## 4️⃣ Add or Modify Subkeys (Manual Option)
 ```bash
 gpg --edit-key your@email.com
 addkey       # choose ECC → cv25519 (for encryption)
@@ -32,7 +57,7 @@ save
 
 ---
 
-## 4️⃣ List Keys
+## 5️⃣ List Keys
 ```bash
 gpg --list-keys
 gpg --list-secret-keys
@@ -40,7 +65,7 @@ gpg --list-secret-keys
 
 ---
 
-## 5️⃣ Export Keys
+## 6️⃣ Export Keys
 Public (safe to share):
 ```bash
 gpg --armor --export your@email.com > publickey.asc
@@ -53,7 +78,7 @@ gpg --armor --export-secret-keys your@email.com > secretkey.asc
 
 ---
 
-## 6️⃣ Create Revocation Certificate
+## 7️⃣ Create Revocation Certificate
 ```bash
 gpg --output revoke.asc --gen-revoke your@email.com
 ```
@@ -61,7 +86,7 @@ gpg --output revoke.asc --gen-revoke your@email.com
 
 ---
 
-## 7️⃣ Remove a Key
+## 8️⃣ Remove a Key
 Public key:
 ```bash
 gpg --delete-key <KEYID>
@@ -73,7 +98,7 @@ gpg --delete-secret-key <KEYID>
 
 ---
 
-## 8️⃣ Publish / Share
+## 9️⃣ Publish / Share
 Send to keyserver:
 ```bash
 gpg --keyserver hkps://keys.openpgp.org --send-keys <KEYID>
@@ -81,7 +106,7 @@ gpg --keyserver hkps://keys.openpgp.org --send-keys <KEYID>
 
 ---
 
-## 9️⃣ Git Integration
+## 🔟 Git Integration
 ```bash
 gpg --list-secret-keys --keyid-format LONG
 git config --global user.signingkey <LONG_KEYID>
@@ -90,12 +115,12 @@ git config --global commit.gpgSign true
 
 ---
 
-## 🔟 Encrypt / Decrypt / Sign / Verify
+## 1️⃣1️⃣ Encrypt / Decrypt / Sign / Verify
 ```bash
-# Encrypt
+# Encrypt (creates file.txt.gpg)
 gpg --encrypt --recipient your@email.com file.txt
 
-# Decrypt
+# Decrypt (restores original file)
 gpg --decrypt file.txt.gpg > file.txt
 
 # Sign
@@ -105,9 +130,11 @@ gpg --armor --sign file.txt
 gpg --verify file.txt.asc
 ```
 
+🗂️ Encrypted files will have a `.gpg` extension by default.
+
 ---
 
-## 1️⃣1️⃣ Find Your Key ID
+## 1️⃣2️⃣ Find Your Key ID
 To view all keys and find your Key ID:
 ```bash
 gpg --list-keys --keyid-format LONG
@@ -153,4 +180,6 @@ You can use either ID, but the **long fingerprint** is safest for editing, expor
 
 **✅ Summary:**  
 Use **Curve25519** (Ed25519/X25519).  
-Always generate a **revocation certificate**, **export keys**, **backup securely**, and **remove old keys** when rotating.
+Always generate a **revocation certificate**, **export keys**, **backup securely**, and **use terminal pinentry** to avoid passphrase mismatches.  
+Encrypted files will be saved as **filename.gpg** by default.
+
