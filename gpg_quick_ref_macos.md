@@ -155,6 +155,52 @@ gpg --verify file.txt.asc
 
 ---
 
+## 1️⃣3️⃣ Decrypting Vault PGP-Encrypted Output
+When using HashiCorp Vault’s **PGP encryption** during initialization, both the *unseal keys* and *root token* are returned as **PGP-encrypted base64** strings.
+
+### 🪄 Example vault-init.json
+```json
+{
+  "unseal_keys_b64": [
+    "hQGMA0FD....long base64 blob...."
+  ],
+  "root_token_pgp": "hQGMA2dZ....another long base64 blob...."
+}
+```
+
+### 🔑 Decrypt the Unseal Key
+```bash
+cat vault-init.json | jq -r '.unseal_keys_b64[0]' | base64 -d | gpg --decrypt
+```
+This outputs the plaintext **unseal key**.
+
+### 🔐 Decrypt the Root Token
+```bash
+cat vault-init.json | jq -r '.root_token_pgp' | base64 -d | gpg --decrypt
+```
+This outputs your **Vault root token**.
+
+### 🧠 How it Works
+- Vault encrypts your keys with your **public key**.
+- The ciphertext is **base64-encoded** for transport.
+- You must **base64-decode** and **GPG-decrypt** it using your **private key**.
+
+### ✅ Quick Reference
+| Item | JSON field | Command to decrypt |
+|------|--------------|--------------------|
+| **Unseal key** | `.unseal_keys_b64[]` | `jq -r '.unseal_keys_b64[0]' vault-init.json \| base64 -d \| gpg --decrypt` |
+| **Root token** | `.root_token_pgp` | `jq -r '.root_token_pgp' vault-init.json \| base64 -d \| gpg --decrypt` |
+
+### ⚠️ Notes
+- Use the **same private key** that matches the public key supplied to Vault.
+- If GPG says `No secret key`, import your private key first:
+  ```bash
+  gpg --import myprivatekey.asc
+  ```
+- Keep `vault-init.json` **offline and encrypted** after decryption.
+
+---
+
 ## 1️⃣2️⃣ Find Your Key ID
 To view all keys and find your Key ID:
 ```bash
